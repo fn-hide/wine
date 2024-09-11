@@ -1,0 +1,11 @@
+[project]
+name = "ml_streamlit"
+version = "0.0.1"
+description = "Streamlit is an open-source Python framework for data scientists and AI/ML engineers to deliver dynamic data apps with only a few lines of code."
+dependencies = [
+    "streamlit==1.38.0",
+]
+
+[build-system]
+requires = ["flit_core<4"]
+build-backend = "flit_core.buildapi"

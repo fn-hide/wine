@@ -1,22 +1,11 @@
 [project]
 name = "wine"
 version = "0.0.1"
-description = "Simple Machine Learning."
+description = "WINE: \"Wisdom In Nurturing Experiments\". This aligns with the idea of learning gradually and seeing progress over time. It emphasizes the growth of knowledge through small, consistent experiments and practice."
 dependencies = [
-    "catboost==1.2.6",
     "ipykernel==6.29.5",
-    "joblib==1.4.2",
     "jupyter==1.1.1",
-    "lightgbm==4.5.0",
     "nbformat==5.10.4",
-    "numpy==1.26.4",
-    "optuna==4.0.0",
-    "pandas==2.2.2",
-    "plotly==5.24.0",
-    "scikit-learn==1.5.1",
-    "scipy==1.14.1",
-    "nbformat==5.10.4",
-    "xgboost==2.1.1",
 ]
 
 [build-system]
