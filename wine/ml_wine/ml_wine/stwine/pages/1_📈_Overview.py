@@ -124,7 +124,7 @@ def get_continuous_cols(df: pd.DataFrame) -> list[str]:
 
 
 @st.cache_data
-def get_histogram_matrix(df: pd.DataFrame, cols: list[str]):
+def get_histogram_matrix(df: pd.DataFrame, cols: list[str]) -> go.Figure:
     '''
     This function identifies all continuous features within the dataset and plots
     a matrix of histograms for each attribute
