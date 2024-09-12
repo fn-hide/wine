@@ -247,8 +247,9 @@ fig = get_3d_scatterplot(df, x, y, z)
 st.plotly_chart(fig, use_container_width=True)
 '''📝 In the 3D Scatterplot above, we can see the relationships between citric acid, fixed acidity, and density, which are highy-correlated features.'''
 
-st.divider()
 continuous_cols = get_continuous_cols(df)
+
+st.divider()
 options = st.multiselect(
     "Select features to see distribution",
     continuous_cols,
