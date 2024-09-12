@@ -293,7 +293,11 @@ x = col1.selectbox('X', options=df.columns.tolist(), index=0)
 y = col2.selectbox('Y', options=df.columns.tolist(), index=1)
 z = col3.selectbox('Z', options=df.columns.tolist(), index=2)
 
-fig = get_3d_scatterplot(df, x, y, z)
+col1, col2 = st.columns(2)
+opacity = col1.slider('Opacity', .0, 1., .8)
+width_line = col2.slider('Width Line', .0, 1., .1)
+
+fig = get_3d_scatterplot(df, x, y, z,opacity=opacity, width_line=width_line)
 st.plotly_chart(fig, use_container_width=True)
 '''📝 In the 3D Scatterplot above, we can see the relationships between citric acid, fixed acidity, and density, which are highy-correlated features.'''
 
