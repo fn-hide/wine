@@ -76,7 +76,12 @@ st.dataframe(df.head(), hide_index=True)
 
 '''## Statistics'''
 st.dataframe(df.describe().T)
+'''📝 We have different scales across the attributes. We may benefit from using rescaling methods, such as StandardScaling.'''
 
 '''## Visualization'''
 fig = get_correlation_heatmap(df)
 st.plotly_chart(fig, use_container_width=True)
+'''📝 The highest correlated feature with the target variable quality is alcohol, with 0.48 correlation.'''
+'''📝 The highest positive correlation is between citric acid and fixed acidity, at 0.7.'''
+'''📝 The highest negative correlation is between ph and fixed acidity, at -0.67.'''
+
