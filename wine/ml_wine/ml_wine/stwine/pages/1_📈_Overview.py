@@ -77,6 +77,6 @@ st.dataframe(df.head(), hide_index=True)
 '''## Statistics'''
 st.dataframe(df.describe().T)
 
-'''## Correlation'''
+'''## Visualization'''
 fig = get_correlation_heatmap(df)
 st.plotly_chart(fig, use_container_width=True)
