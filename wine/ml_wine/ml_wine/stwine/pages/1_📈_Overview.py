@@ -239,6 +239,27 @@ def get_barplot(df: pd.DataFrame, feat: str) -> go.Figure:
     return fig
 
 
+@st.cache_data
+def get_violin_boxplot(df: pd.DataFrame, x: str, y: str):    
+    '''
+    This function plots a Y and X ridgeline plot
+    '''
+    
+    fig = px.violin(df, x=x, y=y, color=x, box=True, points= 'all')
+
+    fig.update_layout(
+        title=f'<b>Violin Boxplot<br> <sup>{x} by {y}</sup></b>',
+        showlegend=False,
+        yaxis=dict(tickangle=-45),
+        height=600,
+        width=1000,
+        margin=dict(t=100, l=80),
+        template='simple_white',
+    )
+
+    return fig
+
+
 # status_text = st.sidebar.empty()
 # progress_bar = st.sidebar.progress(0)
 
@@ -308,3 +329,16 @@ fig = get_barplot(df, feat='quality')
 st.plotly_chart(fig, use_container_width=True)
 '''📝 Most wines are classified as either 5 or 6 in quality.'''
 '''📝 A low number of wines are classified as "exceptionally good" (8). An even lower number gets classified as "awful" (3).'''
+
+st.divider()
+option = st.selectbox(
+    "Select feature to see distribution",
+    continuous_cols,
+    index=0,
+)
+if option:
+    fig = get_violin_boxplot(df, x='quality', y=option)
+    st.plotly_chart(fig, use_container_width=True)
+'''📝 The violin boxplot confirms the high positive correlation between alcohol and quality. The higher the alcohol, the higher the quality of the wine.'''
+'''📝 Similar behavior can be seen in sulphates, as higher median values suggest higher quality.'''
+'''📝 As the median value of volatile acidity gets lower, the quality gets higher. This suggests a negative correlation between this feature and the target variable.'''
