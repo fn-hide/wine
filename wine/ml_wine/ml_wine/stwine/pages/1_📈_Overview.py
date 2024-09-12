@@ -210,6 +210,35 @@ def get_boxplot_matrix(df: pd.DataFrame, cols: list[str]) -> go.Figure:
     return fig
 
 
+@st.cache_data
+def get_barplot(df: pd.DataFrame, feat: str) -> go.Figure:    
+    '''
+    This function is supposed to organize the n-top value counts of any attribute and plot a Barplot
+    '''
+    
+    counts = df[feat].value_counts()
+    fig = px.bar(
+        y=counts.values, 
+        x=counts.index, 
+        color = counts.index,
+        text=counts.values,
+    )
+
+    fig.update_layout(
+        title=f'<b>Frequency of values in {feat}<br> <sup> Barplot</sup></b>',
+        xaxis=dict(title=f'{feat}'),
+        yaxis=dict(title='Count'),
+        legend=dict(title=f'{feat}'),
+        showlegend=True,
+        height=600,
+        width=1000,
+        margin=dict(t=100, l=80),
+        template='simple_white',
+    )
+    
+    return fig
+
+
 # status_text = st.sidebar.empty()
 # progress_bar = st.sidebar.progress(0)
 
@@ -273,3 +302,9 @@ if options:
     fig = get_boxplot_matrix(df, options)
     st.plotly_chart(fig, use_container_width=True)
 '''📝 We have outliers present in every feature except for citric acid.'''
+
+st.divider()
+fig = get_barplot(df, feat='quality')
+st.plotly_chart(fig, use_container_width=True)
+'''📝 Most wines are classified as either 5 or 6 in quality.'''
+'''📝 A low number of wines are classified as "exceptionally good" (8). An even lower number gets classified as "awful" (3).'''
