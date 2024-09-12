@@ -206,7 +206,7 @@ continuous_cols = get_continuous_cols(df)
 options = st.multiselect(
     "Select features to see distribution",
     continuous_cols,
-    continuous_cols,
+    continuous_cols[:4],
 )
 if options:
     fig = get_histogram_matrix(df, options)
