@@ -1,33 +1,39 @@
-import streamlit as st
 import time
+import os
 import numpy as np
+import pandas as pd
+import streamlit as st
 
-st.set_page_config(page_title="Plotting Demo", page_icon="📈")
+st.set_page_config(page_title="Overview", page_icon="📊")
 
-st.markdown("# Plotting Demo")
-st.sidebar.header("Plotting Demo")
+st.markdown("# Overview")
+st.sidebar.header("Overview")
 st.write(
-    """This demo illustrates a combination of plotting and animation with
-Streamlit. We're generating a bunch of random numbers in a loop for around
-5 seconds. Enjoy!"""
+    """This page shows an overview of Wine Quality dataset. Enjoy!"""
 )
 
-progress_bar = st.sidebar.progress(0)
-status_text = st.sidebar.empty()
-last_rows = np.random.randn(1, 1)
-chart = st.line_chart(last_rows)
 
-for i in range(1, 101):
-    new_rows = last_rows[-1, :] + np.random.randn(5, 1).cumsum(axis=0)
-    status_text.text("%i%% Complete" % i)
-    chart.add_rows(new_rows)
-    progress_bar.progress(i)
-    last_rows = new_rows
-    time.sleep(0.05)
+@st.cache_data
+def get_dataset() -> pd.DataFrame:
+    return pd.read_csv('ml_wine/data/train.csv')
 
-progress_bar.empty()
 
-# Streamlit widgets automatically run the script from top to bottom. Since
-# this button is not connected to any other logic, it just causes a plain
-# rerun.
-st.button("Re-run")
+# status_text = st.sidebar.empty()
+# progress_bar = st.sidebar.progress(0)
+
+# status_text.text("%i%% Complete" % i)
+# progress_bar.progress(i)
+
+df = get_dataset()
+df = df.drop(columns='Id')
+n_samples, n_features = df.shape
+
+col1, col2 = st.columns(2)
+col1.metric(label="Samples", value=f"{n_samples}")
+col2.metric(label="Features", value=f"{n_features}")
+
+st.dataframe(df.head(), hide_index=True)
+
+'''## Statistics'''
+st.dataframe(df.describe().T)
+
