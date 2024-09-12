@@ -6,6 +6,7 @@ import streamlit as st
 import plotly.express as px
 import plotly.graph_objs as go
 import plotly.figure_factory as ff
+from plotly.subplots import make_subplots
 
 st.set_page_config(page_title="Overview", page_icon="📊")
 
@@ -108,6 +109,61 @@ def get_3d_scatterplot(df: pd.DataFrame, x: str, y: str, z: str, opacity=.8, wid
     return fig
 
 
+@st.cache_data
+def get_continuous_cols(df: pd.DataFrame) -> list[str]:
+    continuous_cols = []
+    for col in df.columns:
+        if df[col].dtype == object:
+            continue
+        else:
+            if df[col].nunique() <= 2:
+                continue
+            else:
+                continuous_cols.append(col)
+    return continuous_cols
+
+
+@st.cache_data
+def get_histogram_matrix(df: pd.DataFrame, cols: list[str]):
+    '''
+    This function identifies all continuous features within the dataset and plots
+    a matrix of histograms for each attribute
+    '''
+    num_cols = 2
+    num_rows = (len(cols) + 1) // num_cols
+
+    fig = make_subplots(rows=num_rows, cols=num_cols)
+
+    for i, feature in enumerate(cols):
+        row = i // num_cols + 1
+        col = i % num_cols + 1
+
+        fig.add_trace(
+            go.Histogram(
+                x=df[feature],
+                name=feature,
+            ),
+            row=row,
+            col=col,
+        )
+
+        fig.update_xaxes(title_text=feature, row=row, col=col)
+        fig.update_yaxes(title_text='Frequency', row=row, col=col)
+        fig.update_layout(
+            title=f'<b>Histogram Matrix<br> <sup> Continuous Features</sup></b>',
+            showlegend=False,
+        )
+
+    fig.update_layout(
+        height=350 * num_rows,
+        width=1000,
+        margin=dict(t=100, l=80),
+        template='simple_white',
+    )
+
+    return fig
+
+
 # status_text = st.sidebar.empty()
 # progress_bar = st.sidebar.progress(0)
 
@@ -144,3 +200,16 @@ z = col3.selectbox('Z', options=df.columns.tolist(), index=2)
 fig = get_3d_scatterplot(df, x, y, z)
 st.plotly_chart(fig, use_container_width=True)
 '''📝 In the 3D Scatterplot above, we can see the relationships between citric acid, fixed acidity, and density, which are highy-correlated features.'''
+
+st.divider()
+continuous_cols = get_continuous_cols(df)
+options = st.multiselect(
+    "Select features to see distribution",
+    continuous_cols,
+    continuous_cols,
+)
+if options:
+    fig = get_histogram_matrix(df, options)
+    st.plotly_chart(fig, use_container_width=True)
+'''📝 Most distributions do not seem to follow a gaussian-like distribution (i.e., a normal distribution).'''
+'''📝 residual sugar and chlorides seem to be very skewed.'''
