@@ -164,6 +164,52 @@ def get_histogram_matrix(df: pd.DataFrame, cols: list[str]):
     return fig
 
 
+@st.cache_data
+def get_boxplot_matrix(df: pd.DataFrame, cols: list[str]) -> go.Figure:
+    
+    '''
+    This function identifies all continuous features within the dataset and plots
+    a matrix of boxplots for each attribute
+    '''
+    num_cols = 2
+    num_rows = (len(cols) + 1) // num_cols
+
+
+    fig = make_subplots(rows=num_rows, cols=num_cols)
+
+
+    for i, feature in enumerate(cols):
+        row = i // num_cols + 1
+        col = i % num_cols + 1
+
+        fig.add_trace(
+            go.Box(
+                x=df[feature],
+                name = ' '
+            ),
+            row=row,
+            col=col
+        )
+
+        fig.update_yaxes(title_text = ' ', row=row, col=col)
+        fig.update_xaxes(title_text= feature, row=row, col=col)
+        fig.update_layout(
+            title=f'<b>Boxplot Matrix<br> <sup> Continuous Features</sup></b>',
+            showlegend=False,
+            yaxis=dict(tickangle=-90),
+        )
+
+    fig.update_layout(
+        height=350 * num_rows,
+        width=1000,
+        margin=dict(t=100, l=80),
+        template= 'simple_white',
+    )
+
+
+    return fig
+
+
 # status_text = st.sidebar.empty()
 # progress_bar = st.sidebar.progress(0)
 
@@ -207,9 +253,22 @@ options = st.multiselect(
     "Select features to see distribution",
     continuous_cols,
     continuous_cols[:4],
+    key='options_hismat',
 )
 if options:
     fig = get_histogram_matrix(df, options)
     st.plotly_chart(fig, use_container_width=True)
 '''📝 Most distributions do not seem to follow a gaussian-like distribution (i.e., a normal distribution).'''
 '''📝 residual sugar and chlorides seem to be very skewed.'''
+
+st.divider()
+options = st.multiselect(
+    "Select features to see distribution",
+    continuous_cols,
+    continuous_cols[:4],
+    key='options_boxmat',
+)
+if options:
+    fig = get_boxplot_matrix(df, options)
+    st.plotly_chart(fig, use_container_width=True)
+'''📝 We have outliers present in every feature except for citric acid.'''
